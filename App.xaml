@@ -76,7 +76,7 @@
             <Setter Property="Foreground" Value="{StaticResource TextMain}"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderCol}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Padding" Value="16,10"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>

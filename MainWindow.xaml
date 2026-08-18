@@ -1,7 +1,7 @@
 <Window x:Class="EtiquetasDSV.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Etiquetas DSV" Height="720" Width="1080" MinHeight="600" MinWidth="900"
+        Title="Etiquetas DSV" Height="860" Width="1080" MinHeight="760" MinWidth="900"
         WindowStartupLocation="CenterScreen">
 
     <Grid>
