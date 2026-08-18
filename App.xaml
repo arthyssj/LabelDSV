@@ -18,6 +18,25 @@
         <SolidColorBrush x:Key="AccentRedHover" Color="#D32F2F"/>
         <SolidColorBrush x:Key="AccentBlue" Color="#1565C0"/>
 
+        <!-- ==================== Header (degradado sutil) ==================== -->
+        <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#2B2B30" Offset="0"/>
+            <GradientStop Color="#18181A" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- ==================== Sombra ligera para paneles ==================== -->
+        <DropShadowEffect x:Key="PanelShadow" Color="Black" BlurRadius="14" ShadowDepth="2" Direction="270" Opacity="0.35"/>
+
+        <!-- ==================== Panel con sombra y esquinas redondeadas ==================== -->
+        <Style x:Key="PanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource BgPanel}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderCol}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Effect" Value="{StaticResource PanelShadow}"/>
+        </Style>
+
         <!-- ==================== Estilo base: ventana / textos ==================== -->
         <Style TargetType="Window">
             <Setter Property="Background" Value="{StaticResource BgWindow}"/>
@@ -65,7 +84,7 @@
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4">
+                                CornerRadius="8">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
