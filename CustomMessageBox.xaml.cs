@@ -4,6 +4,12 @@ using System.Windows.Media;
 
 namespace EtiquetasDSV
 {
+    /// <summary>
+    /// Dialogo modal con el mismo tema oscuro de la app (reemplaza el
+    /// System.Windows.MessageBox nativo, que siempre se ve claro/blanco
+    /// sin importar el tema). Uso: CustomMessageBox.Show(...) con la misma
+    /// firma que MessageBox.Show, retorna MessageBoxResult.
+    /// </summary>
     public partial class CustomMessageBox : Window
     {
         public MessageBoxResult Resultado { get; private set; } = MessageBoxResult.None;
