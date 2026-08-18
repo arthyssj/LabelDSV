@@ -18,9 +18,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="icon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Remove="icon.ico" />
+    <Resource Include="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
