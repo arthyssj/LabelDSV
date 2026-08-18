@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>EtiquetasDSV</RootNamespace>
+    <AssemblyName>EtiquetasDSV</AssemblyName>
+    <ApplicationIcon></ApplicationIcon>
+
+    <!-- Para publicar como un solo exe sin requerir el runtime instalado,
+         usa el comando "dotnet publish" con las opciones self contained
+         y PublishSingleFile. El comando completo esta en el README.md -->
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishSingleFile>false</PublishSingleFile>
+  </PropertyGroup>
+
+</Project>
