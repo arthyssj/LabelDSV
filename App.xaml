@@ -17,6 +17,7 @@
         <SolidColorBrush x:Key="AccentRed"  Color="#C62828"/>
         <SolidColorBrush x:Key="AccentRedHover" Color="#D32F2F"/>
         <SolidColorBrush x:Key="AccentBlue" Color="#1565C0"/>
+        <SolidColorBrush x:Key="AccentAmber" Color="#F9A825"/>
 
         <!-- ==================== Header (degradado sutil) ==================== -->
         <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0,0" EndPoint="1,1">

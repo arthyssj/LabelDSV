@@ -55,7 +55,7 @@ namespace EtiquetasDSV
                 _cfg.Copias = copias;
 
             _cfg.Guardar();
-            MessageBox.Show("Configuracion guardada.", "Listo",
+            CustomMessageBox.Show("Configuracion guardada.", "Listo",
                 MessageBoxButton.OK, MessageBoxImage.Information);
 
             ActualizarVistaPrevia();
@@ -113,14 +113,14 @@ namespace EtiquetasDSV
 
             if (string.IsNullOrWhiteSpace(impresora))
             {
-                MessageBox.Show("Selecciona una impresora.", "Falta impresora",
+                CustomMessageBox.Show("Selecciona una impresora.", "Falta impresora",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(TxtParte.Text))
             {
-                MessageBox.Show("Captura el Part Number.", "Falta dato",
+                CustomMessageBox.Show("Captura el Part Number.", "Falta dato",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -135,12 +135,12 @@ namespace EtiquetasDSV
             try
             {
                 PrinterService.EnviarZpl(impresora, zpl);
-                MessageBox.Show($"{copias} etiquetas enviadas.", "Listo",
+                CustomMessageBox.Show($"{copias} etiquetas enviadas.", "Listo",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error al imprimir",
+                CustomMessageBox.Show(ex.Message, "Error al imprimir",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -163,7 +163,7 @@ namespace EtiquetasDSV
         {
             if (_filasLote.Count == 0) return;
 
-            var resultado = MessageBox.Show("¿Borrar todas las filas del lote?", "Confirmar",
+            var resultado = CustomMessageBox.Show("¿Borrar todas las filas del lote?", "Confirmar",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (resultado == MessageBoxResult.Yes)
@@ -180,7 +180,7 @@ namespace EtiquetasDSV
         {
             if (!Clipboard.ContainsText())
             {
-                MessageBox.Show("No hay texto en el portapapeles.", "Portapapeles vacio",
+                CustomMessageBox.Show("No hay texto en el portapapeles.", "Portapapeles vacio",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
@@ -218,7 +218,7 @@ namespace EtiquetasDSV
 
             if (agregadas == 0)
             {
-                MessageBox.Show(
+                CustomMessageBox.Show(
                     "No se reconocieron filas validas. Copia las columnas Part Number, " +
                     "Quantity, Reference, Tipo y Notes directamente desde Excel.",
                     "Sin datos", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -240,7 +240,7 @@ namespace EtiquetasDSV
         {
             if (_filasLote.Count == 0)
             {
-                MessageBox.Show("Agrega al menos una fila.", "Lote vacio",
+                CustomMessageBox.Show("Agrega al menos una fila.", "Lote vacio",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -248,7 +248,7 @@ namespace EtiquetasDSV
             string impresora = CmbImpresoraLote.SelectedItem as string ?? "";
             if (string.IsNullOrWhiteSpace(impresora))
             {
-                MessageBox.Show("Selecciona una impresora.", "Falta impresora",
+                CustomMessageBox.Show("Selecciona una impresora.", "Falta impresora",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -301,14 +301,14 @@ namespace EtiquetasDSV
                 else
                 {
                     TxtEstadoLote.Text = $"Listo: {enviados} etiquetas enviadas.";
-                    MessageBox.Show($"{enviados} etiquetas enviadas.", "Lote terminado",
+                    CustomMessageBox.Show($"{enviados} etiquetas enviadas.", "Lote terminado",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
                 TxtEstadoLote.Text = "Error durante la impresion.";
-                MessageBox.Show(ex.Message, "Error al imprimir",
+                CustomMessageBox.Show(ex.Message, "Error al imprimir",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally

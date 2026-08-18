@@ -1,0 +1,46 @@
+<Window x:Class="EtiquetasDSV.CustomMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        KeyDown="Window_KeyDown">
+
+    <Border Background="{StaticResource BgPanel}"
+            BorderBrush="{StaticResource BorderCol}"
+            BorderThickness="1"
+            CornerRadius="10"
+            Padding="20"
+            Effect="{StaticResource PanelShadow}"
+            MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <StackPanel MinWidth="340" MaxWidth="440">
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                <Border x:Name="IconoFondo" Width="30" Height="30" CornerRadius="15" Margin="0,0,12,0">
+                    <TextBlock x:Name="TxtIcono" FontSize="15" FontWeight="Bold" Foreground="White"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock x:Name="TxtTitulo" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"
+                           Foreground="{StaticResource TextMain}"/>
+            </StackPanel>
+
+            <TextBlock x:Name="TxtMensaje" TextWrapping="Wrap" FontSize="13" Margin="0,0,0,20"
+                       Foreground="{StaticResource TextMain}"/>
+
+            <StackPanel x:Name="PanelBotones" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="BtnSi" Content="Si" Style="{StaticResource BotonImprimir}"
+                        Margin="0,0,8,0" MinWidth="80" Click="BtnSi_Click"/>
+                <Button x:Name="BtnNo" Content="No" Style="{StaticResource BotonCancelar}"
+                        Margin="0,0,8,0" MinWidth="80" Click="BtnNo_Click"/>
+                <Button x:Name="BtnCancelar" Content="Cancelar" Style="{StaticResource BotonNormal}"
+                        Margin="0,0,8,0" MinWidth="80" Click="BtnCancelar_Click"/>
+                <Button x:Name="BtnOk" Content="Aceptar" Style="{StaticResource BotonImprimir}"
+                        MinWidth="80" Click="BtnOk_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>
