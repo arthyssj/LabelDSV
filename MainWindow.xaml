@@ -49,6 +49,12 @@
 
                             <TextBlock Text="Reference:" Margin="0,14,0,4"/>
                             <TextBox x:Name="TxtReferencia" TextChanged="Campo_Cambiado"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                <CheckBox x:Name="ChkReferenciaAuto" Content="Automatica" VerticalAlignment="Center"
+                                          Checked="ChkReferenciaAuto_Checked" Unchecked="ChkReferenciaAuto_Unchecked"/>
+                                <Button Content="Generar" Style="{StaticResource BotonNormal}"
+                                        Padding="10,4" Margin="12,0,0,0" Click="BtnGenerarReferencia_Click"/>
+                            </StackPanel>
 
                             <TextBlock Text="Tipo:" Margin="0,14,0,4"/>
                             <ComboBox x:Name="CmbTipo" SelectionChanged="Campo_Cambiado">
@@ -125,6 +131,8 @@
                                 Margin="0,0,8,0" Click="BtnEliminarFila_Click"/>
                         <Button Content="Limpiar todo" Style="{StaticResource BotonNormal}"
                                 Margin="0,0,8,0" Click="BtnLimpiarTabla_Click"/>
+                        <Button Content="Generar referencias" Style="{StaticResource BotonNormal}"
+                                Margin="0,0,8,0" Click="BtnGenerarReferenciasLote_Click"/>
                     </WrapPanel>
 
                     <Border Grid.Row="3" Margin="0,20,0,0" Style="{StaticResource PanelStyle}">

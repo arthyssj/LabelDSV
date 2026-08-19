@@ -18,6 +18,9 @@ namespace EtiquetasDSV
         public int Copias { get; set; } = 4;
         public string Impresora { get; set; } = "";
 
+        public string UltimaFechaReferencia { get; set; } = "";
+        public int UltimoContadorReferencia { get; set; } = 0;
+
         private static string RutaArchivo =>
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
@@ -41,6 +44,31 @@ namespace EtiquetasDSV
             }
 
             return new Config();
+        }
+
+        /// <summary>
+        /// Genera la siguiente referencia automatica: "RF" + dia de la semana
+        /// estilo VBA (domingo=1 ... sabado=7) + fecha MMddyyyy + "-" +
+        /// contador. El contador se reinicia en 1 cada vez que cambia el dia
+        /// y se persiste en el mismo JSON de configuracion.
+        /// Ejemplo: "RF0308182026-1" (martes 18-ago-2026, primera del dia).
+        /// </summary>
+        public string GenerarReferencia()
+        {
+            DateTime hoy = DateTime.Now.Date;
+            string hoyStr = hoy.ToString("yyyy-MM-dd");
+
+            if (UltimaFechaReferencia != hoyStr)
+            {
+                UltimaFechaReferencia = hoyStr;
+                UltimoContadorReferencia = 0;
+            }
+
+            UltimoContadorReferencia++;
+            Guardar();
+
+            int diaSemana = (int)hoy.DayOfWeek + 1; // domingo=1 ... sabado=7
+            return $"RF{diaSemana:D2}{hoy:MMddyyyy}-{UltimoContadorReferencia}";
         }
 
         public void Guardar()

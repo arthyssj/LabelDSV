@@ -92,6 +92,25 @@ namespace EtiquetasDSV
         // ================================================================
         private void Campo_Cambiado(object sender, RoutedEventArgs e) => ActualizarVistaPrevia();
 
+        private void ChkReferenciaAuto_Checked(object sender, RoutedEventArgs e)
+        {
+            TxtReferencia.IsReadOnly = true;
+            TxtReferencia.Text = _cfg.GenerarReferencia();
+        }
+
+        private void ChkReferenciaAuto_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TxtReferencia.IsReadOnly = false;
+        }
+
+        private void BtnGenerarReferencia_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChkReferenciaAuto.IsChecked == true)
+                TxtReferencia.Text = _cfg.GenerarReferencia();
+            else
+                ChkReferenciaAuto.IsChecked = true;
+        }
+
         private void BtnVistaPrevia_Click(object sender, RoutedEventArgs e) => ActualizarVistaPrevia();
 
         private void ActualizarVistaPrevia()
@@ -199,6 +218,28 @@ namespace EtiquetasDSV
         {
             if (GridLote.SelectedItem is FilaLote fila)
                 _filasLote.Remove(fila);
+        }
+
+        /// <summary>
+        /// Rellena la columna Reference solo en las filas que esten vacias,
+        /// una referencia automatica distinta por fila (consecutiva). Las
+        /// filas que ya traigan Reference (tecleada o pegada de Excel) no
+        /// se tocan.
+        /// </summary>
+        private void BtnGenerarReferenciasLote_Click(object sender, RoutedEventArgs e)
+        {
+            if (_filasLote.Count == 0)
+            {
+                CustomMessageBox.Show("Agrega al menos una fila.", "Lote vacio",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            foreach (var fila in _filasLote)
+            {
+                if (string.IsNullOrWhiteSpace(fila.Referencia))
+                    fila.Referencia = _cfg.GenerarReferencia();
+            }
         }
 
         private void BtnLimpiarTabla_Click(object sender, RoutedEventArgs e)
