@@ -6,20 +6,25 @@
         Icon="/icon.ico">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="23*"/>
+            <ColumnDefinition Width="7*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="206*"/>
+            <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
 
         <!-- ============================================================ -->
         <!-- HEADER -->
         <!-- ============================================================ -->
-        <Border Grid.Row="0" Background="{StaticResource HeaderGradient}" Padding="24,16">
+        <Border Grid.Row="0" Background="{StaticResource HeaderGradient}" Padding="24,16" Grid.ColumnSpan="2" Margin="0,0,0,765" Grid.RowSpan="2">
             <TextBlock Text="Etiquetas DSV" FontSize="20" FontWeight="Bold"
                        Foreground="{StaticResource TextMain}"/>
         </Border>
 
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
 
             <!-- ============================================================ -->
             <!-- TAB 1: IMPRIMIR INDIVIDUAL -->
