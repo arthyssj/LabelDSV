@@ -39,6 +39,7 @@ namespace EtiquetasDSV
             TxtFormatoFecha.Text = _cfg.FormatoFecha;
             TxtCopias.Text = _cfg.Copias.ToString();
             TxtCopiasLote.Text = _cfg.Copias.ToString();
+            TxtCopiasPallet.Text = _cfg.Copias.ToString();
         }
 
         private void BtnGuardarConfig_Click(object sender, RoutedEventArgs e)
@@ -70,6 +71,7 @@ namespace EtiquetasDSV
 
             CmbImpresora.ItemsSource = impresoras;
             CmbImpresoraLote.ItemsSource = impresoras;
+            CmbImpresoraPallet.ItemsSource = impresoras;
 
             string preferida = !string.IsNullOrEmpty(_cfg.Impresora) && impresoras.Contains(_cfg.Impresora)
                 ? _cfg.Impresora
@@ -77,6 +79,7 @@ namespace EtiquetasDSV
 
             CmbImpresora.SelectedItem = preferida;
             CmbImpresoraLote.SelectedItem = preferida;
+            CmbImpresoraPallet.SelectedItem = preferida;
         }
 
         private void BtnActualizarImpresoras_Click(object sender, RoutedEventArgs e)
@@ -131,6 +134,45 @@ namespace EtiquetasDSV
             string zpl = ZplBuilder.Construir(
                 TxtParte.Text, TxtCantidad.Text, TxtReferencia.Text,
                 tipo, TxtNotas.Text, _cfg, copias);
+
+            try
+            {
+                PrinterService.EnviarZpl(impresora, zpl);
+                CustomMessageBox.Show($"{copias} etiquetas enviadas.", "Listo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                CustomMessageBox.Show(ex.Message, "Error al imprimir",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // ================================================================
+        // TAB PALLET
+        // ================================================================
+        private void BtnImprimirPallet_Click(object sender, RoutedEventArgs e)
+        {
+            string impresora = CmbImpresoraPallet.SelectedItem as string ?? "";
+
+            if (string.IsNullOrWhiteSpace(impresora))
+            {
+                CustomMessageBox.Show("Selecciona una impresora.", "Falta impresora",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtPallet.Text))
+            {
+                CustomMessageBox.Show("Captura el Pallet.", "Falta dato",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            int copias = int.TryParse(TxtCopiasPallet.Text, out int c) ? c : 4;
+
+            string zpl = ZplBuilder.ConstruirPallet(
+                TxtReferenciaPallet.Text, TxtPallet.Text, _cfg, copias);
 
             try
             {

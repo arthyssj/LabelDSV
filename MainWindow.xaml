@@ -47,7 +47,7 @@
 
                             <TextBlock Text="Tipo:" Margin="0,14,0,4"/>
                             <ComboBox x:Name="CmbTipo" SelectionChanged="Campo_Cambiado">
-                                <ComboBoxItem Content="IN-BOND" IsSelected="True"/>
+                                <ComboBoxItem Content="INBOND" IsSelected="True"/>
                                 <ComboBoxItem Content="DOMESTIC"/>
                             </ComboBox>
 
@@ -157,7 +157,36 @@
             </TabItem>
 
             <!-- ============================================================ -->
-            <!-- TAB 3: CONFIGURACION -->
+            <!-- TAB 3: IMPRIMIR PALLET -->
+            <!-- ============================================================ -->
+            <TabItem Header="Pallet">
+                <Border Margin="20" MaxWidth="380" HorizontalAlignment="Left" Style="{StaticResource PanelStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Datos de la etiqueta de pallet" FontSize="16" FontWeight="Bold" Margin="0,0,0,16"/>
+
+                        <TextBlock Text="Reference:" Margin="0,0,0,4"/>
+                        <TextBox x:Name="TxtReferenciaPallet"/>
+
+                        <TextBlock Text="Pallet:" Margin="0,14,0,4"/>
+                        <TextBox x:Name="TxtPallet"/>
+
+                        <TextBlock Text="Copias:" Margin="0,14,0,4"/>
+                        <TextBox x:Name="TxtCopiasPallet" Text="4" Width="60" HorizontalAlignment="Left"/>
+
+                        <TextBlock Text="Impresora:" Margin="0,14,0,4"/>
+                        <ComboBox x:Name="CmbImpresoraPallet"/>
+
+                        <Button Content="Actualizar lista de impresoras" Style="{StaticResource BotonNormal}"
+                                Margin="0,16,0,0" Click="BtnActualizarImpresoras_Click"/>
+
+                        <Button Content="Imprimir" Style="{StaticResource BotonImprimir}"
+                                Height="44" Margin="0,14,0,0" Click="BtnImprimirPallet_Click"/>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!-- ============================================================ -->
+            <!-- TAB 4: CONFIGURACION -->
             <!-- ============================================================ -->
             <TabItem Header="Configuracion">
                 <Border Margin="20" MaxWidth="540" HorizontalAlignment="Left" Style="{StaticResource PanelStyle}">

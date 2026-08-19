@@ -100,6 +100,67 @@ namespace EtiquetasDSV
         }
 
         /// <summary>
+        /// Construye el ZPL de la etiqueta de Pallet: misma plantilla validada
+        /// en zpl_pallet.txt (4 x 6.5 in a 300 dpi, sin rotar - ^A0N / ^BCN,
+        /// a diferencia de la etiqueta principal que va rotada 90 grados).
+        /// Solo se sustituyen los campos variables (titulo, pallet, reference,
+        /// fecha, copias); el resto de las coordenadas son identicas al
+        /// archivo de referencia.
+        /// </summary>
+        public static string ConstruirPallet(
+            string referencia,
+            string pallet,
+            Config cfg,
+            int copias)
+        {
+            referencia = Limpiar(referencia);
+            pallet = Limpiar(pallet);
+
+            string titulo = Limpiar(cfg.Titulo).ToUpperInvariant();
+            if (string.IsNullOrEmpty(titulo)) titulo = "DSV";
+
+            string formatoFecha = string.IsNullOrWhiteSpace(cfg.FormatoFecha)
+                ? "dd-MM-yyyy"
+                : cfg.FormatoFecha;
+            string fecha = DateTime.Now.ToString(formatoFecha);
+
+            if (copias < 1) copias = 1;
+
+            var z = new StringBuilder();
+
+            z.Append("^XA");
+            z.Append("^CI28");
+            z.Append("^PW1200");
+            z.Append("^LL1950");
+            z.Append("^LH0,0");
+
+            // Header negro con letras blancas
+            z.Append("^FO0,0^GB1200,150,150^FS");
+            z.Append("^FR^FO60,35^A0N,55,55^FDEATON^FS");
+            z.Append($"^FR^FO0,45^FB1200,1,0,C^A0N,70,70^FD{titulo}^FS");
+
+            // Pallet
+            z.Append("^FO90,190^GB1020,780,5^FS");
+            z.Append("^FO0,250^FB1200,1,0,C^A0N,85,85^FDPALLET^FS");
+            z.Append($"^FO0,330^FB1200,1,0,C^A0N,130,130^FD{pallet}^FS");
+            z.Append($"^FO280,560^BY5^BCN,220,Y,N,N^FD{pallet}^FS");
+
+            // Reference
+            z.Append("^FO90,1010^GB1020,780,5^FS");
+            z.Append("^FO0,1070^FB1200,1,0,C^A0N,75,75^FDREFERENCE^FS");
+            z.Append($"^FO0,1150^FB1200,1,0,C^A0N,110,110^FD{referencia}^FS");
+            z.Append($"^FO150,1380^BY4^BCN,220,Y,N,N^FD{referencia}^FS");
+
+            // Fecha
+            z.Append($"^FO60,1830^A0N,50,50^FDDATE: {fecha}^FS");
+
+            z.Append($"^PQ{copias},0,0,N");
+            z.Append("^XZ");
+
+            return z.ToString();
+        }
+
+        /// <summary>
         /// ^ ~ y \ son caracteres de control en ZPL: hay que neutralizarlos
         /// para que no rompan el comando si vienen dentro de un dato capturado.
         /// </summary>
