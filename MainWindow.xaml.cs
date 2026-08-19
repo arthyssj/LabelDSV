@@ -40,6 +40,31 @@ namespace EtiquetasDSV
             TxtCopias.Text = _cfg.Copias.ToString();
             TxtCopiasLote.Text = _cfg.Copias.ToString();
             TxtCopiasPallet.Text = _cfg.Copias.ToString();
+
+            TxtProximaReferencia.Text = ProximoContadorReferencia().ToString();
+        }
+
+        private int ProximoContadorReferencia()
+        {
+            string hoy = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            return _cfg.UltimaFechaReferencia == hoy ? _cfg.UltimoContadorReferencia + 1 : 1;
+        }
+
+        private void BtnReiniciarContadorRef_Click(object sender, RoutedEventArgs e)
+        {
+            if (!int.TryParse(TxtProximaReferencia.Text, out int proximo) || proximo < 1)
+            {
+                CustomMessageBox.Show("Captura un numero valido (1 o mayor).", "Dato invalido",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            _cfg.UltimaFechaReferencia = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            _cfg.UltimoContadorReferencia = proximo - 1;
+            _cfg.Guardar();
+
+            CustomMessageBox.Show($"Listo. La proxima referencia sera RF...-{proximo}.", "Contador actualizado",
+                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void BtnGuardarConfig_Click(object sender, RoutedEventArgs e)
@@ -218,6 +243,28 @@ namespace EtiquetasDSV
         {
             if (GridLote.SelectedItem is FilaLote fila)
                 _filasLote.Remove(fila);
+        }
+
+        private void BtnDuplicarFila_Click(object sender, RoutedEventArgs e)
+        {
+            if (GridLote.SelectedItem is not FilaLote fila)
+            {
+                CustomMessageBox.Show("Selecciona una fila para duplicar.", "Sin seleccion",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var copia = new FilaLote
+            {
+                Parte = fila.Parte,
+                Cantidad = fila.Cantidad,
+                Referencia = fila.Referencia,
+                Tipo = fila.Tipo,
+                Notas = fila.Notas
+            };
+
+            int indice = _filasLote.IndexOf(fila);
+            _filasLote.Insert(indice + 1, copia);
         }
 
         /// <summary>

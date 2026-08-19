@@ -112,7 +112,7 @@
                         Text="Pega filas desde Excel (Part Number, Quantity, Reference, Tipo, Notes) o agrega manualmente."/>
 
                     <DataGrid Grid.Row="1" x:Name="GridLote" AutoGenerateColumns="False"
-                              CanUserAddRows="False" HeadersVisibility="Column">
+                              CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Part Number" Binding="{Binding Parte}" Width="160"/>
                             <DataGridTextColumn Header="Quantity" Binding="{Binding Cantidad}" Width="100"/>
@@ -123,15 +123,17 @@
                     </DataGrid>
 
                     <WrapPanel Grid.Row="2" Margin="0,16,0,0">
-                        <Button Content="Agregar fila vacia" Style="{StaticResource BotonNormal}"
+                        <Button Content="Agregar fila" Style="{StaticResource BotonNormal}"
                                 Margin="0,0,8,0" Click="BtnAgregarFila_Click"/>
-                        <Button Content="Pegar del portapapeles" Style="{StaticResource BotonNormal}"
+                        <Button Content="Duplicar fila" Style="{StaticResource BotonNormal}"
+                                Margin="0,0,8,0" Click="BtnDuplicarFila_Click"/>
+                        <Button Content="Pegar" Style="{StaticResource BotonNormal}"
                                 Margin="0,0,8,0" Click="BtnPegar_Click"/>
-                        <Button Content="Eliminar fila seleccionada" Style="{StaticResource BotonNormal}"
+                        <Button Content="Eliminar fila" Style="{StaticResource BotonNormal}"
                                 Margin="0,0,8,0" Click="BtnEliminarFila_Click"/>
                         <Button Content="Limpiar todo" Style="{StaticResource BotonNormal}"
                                 Margin="0,0,8,0" Click="BtnLimpiarTabla_Click"/>
-                        <Button Content="Generar referencias" Style="{StaticResource BotonNormal}"
+                        <Button Content="Generar refs" Style="{StaticResource BotonNormal}"
                                 Margin="0,0,8,0" Click="BtnGenerarReferenciasLote_Click"/>
                     </WrapPanel>
 
@@ -154,7 +156,7 @@
                                         Style="{StaticResource BotonCancelar}" Margin="0,0,8,0"
                                         IsEnabled="False" Click="BtnCancelarLote_Click"/>
 
-                                <Button Content="Limpiar cola / reiniciar conteo" Style="{StaticResource BotonNormal}"
+                                <Button Content="Reiniciar conteo" Style="{StaticResource BotonNormal}"
                                         Click="BtnLimpiarConteo_Click"/>
                             </WrapPanel>
 
@@ -220,6 +222,14 @@
 
                         <TextBlock Margin="0,8,0,0" Foreground="{StaticResource TextMuted}" FontSize="11"
                             Text="Ejemplos: dd-MM-yyyy = 31-07-2026     yyyy-MM-dd = 2026-07-31"/>
+
+                        <TextBlock Text="Contador de referencias automaticas:" Margin="0,20,0,4"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="La proxima sera RF...-" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TxtProximaReferencia" Width="60" Margin="6,0,0,0"/>
+                            <Button Content="Reiniciar contador" Style="{StaticResource BotonNormal}"
+                                    Padding="10,4" Margin="12,0,0,0" Click="BtnReiniciarContadorRef_Click"/>
+                        </StackPanel>
 
                         <Button Content="Guardar configuracion" Style="{StaticResource BotonImprimir}"
                                 Width="220" HorizontalAlignment="Left" Margin="0,24,0,0"
