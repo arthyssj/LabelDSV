@@ -9,7 +9,7 @@ namespace EtiquetasDSV
         private string _parte = "";
         private string _cantidad = "";
         private string _referencia = "";
-        private string _tipo = "IN-BOND";
+        private string _tipo = "INBOND";
         private string _notas = "";
 
         public string Parte

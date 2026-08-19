@@ -47,7 +47,7 @@ sin permisos de instalacion.
 
 ## Que hace la app
 
-Tres pestanas en la ventana principal (`MainWindow.xaml`):
+Cuatro pestanas en la ventana principal (`MainWindow.xaml`):
 
 1. **Imprimir individual** - captura los datos de una etiqueta (Part
    Number, Quantity, Reference, Tipo, Notes, copias, impresora), muestra
@@ -57,7 +57,12 @@ Tres pestanas en la ventana principal (`MainWindow.xaml`):
    "Pegar del portapapeles", columnas en orden Part Number, Quantity,
    Reference, Tipo, Notes separadas por tab). Imprime todas las filas en
    segundo plano con barra de progreso y boton de cancelar.
-3. **Configuracion** - datos fijos que se repiten en toda etiqueta
+3. **Pallet** - etiqueta de pallet independiente, con solo dos campos
+   (Reference y Pallet) mas copias e impresora. Usa una plantilla ZPL
+   propia (`ZplBuilder.ConstruirPallet()`, ver "Ajustar el diseno de la
+   etiqueta" abajo) que no va rotada 90 grados como la etiqueta principal,
+   por lo que no tiene panel de vista previa.
+4. **Configuracion** - datos fijos que se repiten en toda etiqueta
    (titulo del header, dos lineas de "From", formato de fecha .NET). Se
    guardan en disco y se recargan al abrir la app.
 
@@ -67,10 +72,11 @@ Tres pestanas en la ventana principal (`MainWindow.xaml`):
     App.xaml / .cs           - punto de entrada; App.xaml define TODO el tema oscuro global
                                 (colores, estilos de Button/TextBox/ComboBox/TabControl/DataGrid,
                                 sombras y esquinas redondeadas) como recursos compartidos
-    MainWindow.xaml           - diseno de las 3 pestanas (Individual, Lote, Config) + header
-    MainWindow.xaml.cs        - logica de la ventana: eventos, validaciones, impresion, lote
+    MainWindow.xaml           - diseno de las 4 pestanas (Individual, Lote, Pallet, Config) + header
+    MainWindow.xaml.cs        - logica de la ventana: eventos, validaciones, impresion, lote, pallet
     ZplBuilder.cs              - construye la cadena ZPL de la etiqueta (fuente de verdad de
-                                 las coordenadas reales que se imprimen)
+                                 las coordenadas reales que se imprimen); tambien construye la
+                                 etiqueta de Pallet (ConstruirPallet())
     VistaPrevia.cs              - dibuja en el Canvas una aproximacion visual de la etiqueta,
                                  usando las MISMAS coordenadas que ZplBuilder.cs (ver abajo)
     PrinterService.cs            - enumera impresoras y envia ZPL crudo (P/Invoke a winspool.drv)
@@ -138,6 +144,11 @@ franjas negras de relleno, no como un Code128 real). Para verificar el
 diseno exacto antes de imprimir en produccion, sigue usando
 labelary.com/viewer.html con el ZPL generado.
 
+La etiqueta de **Pallet** (`ZplBuilder.ConstruirPallet()`) es una plantilla
+distinta y no sigue esta logica: no va rotada (usa `^A0N` / `^BCN` en vez
+de `^A0R` / `^BCR`), replica tal cual las coordenadas de `zpl_pallet.txt`,
+y por eso no tiene vista previa en pantalla.
+
 ## Impresion (PrinterService.cs)
 
 Envia la cadena ZPL como datos RAW directamente a la cola de impresion de
@@ -166,3 +177,8 @@ que ya hayas hecho ahi (mover un codigo de barras, cambiar un texto) se
 puede replicar cambiando el mismo numero en este archivo. Despues,
 replica el cambio en `VistaPrevia.cs` (ver "Sistema de coordenadas"
 arriba) para que la vista previa siga siendo fiel a lo que se imprime.
+
+La etiqueta de Pallet tiene sus propias coordenadas en
+`ZplBuilder.cs`, metodo `ConstruirPallet()`, tomadas tal cual de
+`zpl_pallet.txt`. Como no tiene vista previa, un ajuste ahi no requiere
+tocar `VistaPrevia.cs`.
