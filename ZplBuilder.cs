@@ -31,9 +31,6 @@ namespace EtiquetasDSV
             string titulo = Limpiar(cfg.Titulo).ToUpperInvariant();
             if (string.IsNullOrEmpty(titulo)) titulo = "DSV";
 
-            string from1 = Limpiar(cfg.FromLinea1);
-            string from2 = Limpiar(cfg.FromLinea2);
-
             string formatoFecha = string.IsNullOrWhiteSpace(cfg.FormatoFecha)
                 ? "dd-MM-yyyy"
                 : cfg.FormatoFecha;
@@ -55,30 +52,23 @@ namespace EtiquetasDSV
             z.Append($"^FR^FO1085,0^FB1950,1,0,C^A0R,75,75^FD{titulo}^FS");
 
             // Part Number
-            z.Append("^FO530,60^GB480,1090,5^FS");
-            z.Append("^FO945,60^FB1090,1,0,C^A0R,45,45^FDPART NUMBER^FS");
-            z.Append($"^FO840,60^FB1090,1,0,C^A0R,95,95^FD{parte}^FS");
-            z.Append($"^FO620,260^BY4^BCR,180,Y,N,N^FD{parte}^FS");
+            z.Append("^FO1015,60^A0R,35,35^FDPART NUMBER^FS");
+            z.Append($"^FO930,60^A0R,80,80^FD{parte}^FS");
+            z.Append($"^FO785,280^BY3^BCR,150,Y,N,N^FD{parte}^FS");
 
             // Quantity
-            z.Append("^FO530,1150^GB480,740,5^FS");
-            z.Append("^FO945,1150^FB740,1,0,C^A0R,45,45^FDQUANTITY^FS");
-            z.Append($"^FO840,1150^FB740,1,0,C^A0R,95,95^FD{cantidad}^FS");
-            z.Append($"^FO620,1380^BY3^BCR,180,Y,N,N^FD{cantidad}^FS");
+            z.Append("^FO685,60^A0R,30,30^FDQUANTITY^FS");
+            z.Append($"^FO605,60^A0R,70,70^FD{cantidad}^FS");
+            z.Append($"^FO470,280^BY3^BCR,140,Y,N,N^FD{cantidad}^FS");
 
             // Reference
-            z.Append("^FO435,60^A0R,45,45^FDREFERENCE^FS");
-            z.Append($"^FO335,60^A0R,85,85^FD{referencia}^FS");
-            z.Append($"^FO310,800^BY3^BCR,150,Y,N,N^FD{referencia}^FS");
+            z.Append("^FO380,60^A0R,28,28^FDREFERENCE^FS");
+            z.Append($"^FO320,60^A0R,55,55^FD{referencia}^FS");
+            z.Append($"^FO175,280^BY3^BCR,140,Y,N,N^FD{referencia}^FS");
 
             // Tipo
-            z.Append("^FO350,1500^GB120,390,5^FS");
-            z.Append($"^FO370,1500^FB390,1,0,C^A0R,70,70^FD{tipo}^FS");
-
-            // From
-            z.Append("^FO215,60^A0R,45,45^FDFROM^FS");
-            z.Append($"^FO165,60^A0R,42,42^FD{from1}^FS");
-            z.Append($"^FO120,60^A0R,42,42^FD{from2}^FS");
+            z.Append("^FO225,1500^GB120,390,5^FS");
+            z.Append($"^FO240,1500^FB390,1,0,C^A0R,70,70^FD{tipo}^FS");
 
             // Notes y fecha
             z.Append("^FO50,60^A0R,45,45^FDNOTES:^FS");
@@ -86,12 +76,12 @@ namespace EtiquetasDSV
             {
                 z.Append($"^FO50,250^FB1100,1,0,L^A0R,45,45^FD{notas}^FS");
             }
-            z.Append($"^FO50,1400^A0R,45,45^FDDATE: {fecha}^FS");
+            z.Append($"^FO50,1500^A0R,45,45^FDDATE: {fecha}^FS");
 
             // Separadores
-            z.Append("^FO506,60^GB4,1830,4^FS");
-            z.Append("^FO270,60^GB4,1830,4^FS");
-            z.Append("^FO100,60^GB4,1830,4^FS");
+            z.Append("^FO735,60^GB4,1830,4^FS");
+            z.Append("^FO425,60^GB4,1830,4^FS");
+            z.Append("^FO135,60^GB4,1830,4^FS");
 
             z.Append($"^PQ{copias},0,0,N");
             z.Append("^XZ");

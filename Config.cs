@@ -12,8 +12,6 @@ namespace EtiquetasDSV
     public class Config
     {
         public string Titulo { get; set; } = "DSV";
-        public string FromLinea1 { get; set; } = "Av. Chapultepec s/n Parque Industrial Colonial";
-        public string FromLinea2 { get; set; } = "Reynosa, Tam. Mexico 88787";
         public string FormatoFecha { get; set; } = "dd-MM-yyyy";
         public int Copias { get; set; } = 4;
         public string Impresora { get; set; } = "";
@@ -46,11 +44,16 @@ namespace EtiquetasDSV
             return new Config();
         }
 
+        /// <summary>Contador maximo del sufijo de referencia (RF...-999); al superarlo vuelve a 1.</summary>
+        public const int MaxContadorReferencia = 999;
+
         /// <summary>
         /// Genera la siguiente referencia automatica: "RF" + dia de la semana
         /// estilo VBA (domingo=1 ... sabado=7) + fecha MMddyyyy + "-" +
-        /// contador. El contador se reinicia en 1 cada vez que cambia el dia
-        /// y se persiste en el mismo JSON de configuracion.
+        /// contador. El contador se reinicia en 1 cada vez que cambia el dia,
+        /// y tambien al superar <see cref="MaxContadorReferencia"/> (999), para
+        /// que la referencia nunca exceda el limite de 18 caracteres del campo.
+        /// Se persiste en el mismo JSON de configuracion.
         /// Ejemplo: "RF0308182026-1" (martes 18-ago-2026, primera del dia).
         /// </summary>
         public string GenerarReferencia()
@@ -65,6 +68,9 @@ namespace EtiquetasDSV
             }
 
             UltimoContadorReferencia++;
+            if (UltimoContadorReferencia > MaxContadorReferencia)
+                UltimoContadorReferencia = 1;
+
             Guardar();
 
             int diaSemana = (int)hoy.DayOfWeek + 1; // domingo=1 ... sabado=7

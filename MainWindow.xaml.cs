@@ -34,8 +34,6 @@ namespace EtiquetasDSV
         private void CargarConfigEnUI()
         {
             TxtTitulo.Text = _cfg.Titulo;
-            TxtFrom1.Text = _cfg.FromLinea1;
-            TxtFrom2.Text = _cfg.FromLinea2;
             TxtFormatoFecha.Text = _cfg.FormatoFecha;
             TxtCopias.Text = _cfg.Copias.ToString();
             TxtCopiasLote.Text = _cfg.Copias.ToString();
@@ -52,9 +50,10 @@ namespace EtiquetasDSV
 
         private void BtnReiniciarContadorRef_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(TxtProximaReferencia.Text, out int proximo) || proximo < 1)
+            if (!int.TryParse(TxtProximaReferencia.Text, out int proximo)
+                || proximo < 1 || proximo > Config.MaxContadorReferencia)
             {
-                CustomMessageBox.Show("Captura un numero valido (1 o mayor).", "Dato invalido",
+                CustomMessageBox.Show($"Captura un numero entre 1 y {Config.MaxContadorReferencia}.", "Dato invalido",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -70,8 +69,6 @@ namespace EtiquetasDSV
         private void BtnGuardarConfig_Click(object sender, RoutedEventArgs e)
         {
             _cfg.Titulo = TxtTitulo.Text;
-            _cfg.FromLinea1 = TxtFrom1.Text;
-            _cfg.FromLinea2 = TxtFrom2.Text;
             _cfg.FormatoFecha = TxtFormatoFecha.Text;
 
             if (CmbImpresora.SelectedItem is string impresora)

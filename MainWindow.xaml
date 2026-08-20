@@ -38,13 +38,13 @@
                             <TextBlock Text="Datos de la etiqueta" FontSize="15" FontWeight="Bold" Margin="0,0,0,12"/>
 
                             <TextBlock Text="Part Number:" Margin="0,0,0,3"/>
-                            <TextBox x:Name="TxtParte" TextChanged="Campo_Cambiado"/>
+                            <TextBox x:Name="TxtParte" MaxLength="30" TextChanged="Campo_Cambiado"/>
 
                             <TextBlock Text="Quantity:" Margin="0,10,0,3"/>
-                            <TextBox x:Name="TxtCantidad" TextChanged="Campo_Cambiado"/>
+                            <TextBox x:Name="TxtCantidad" MaxLength="10" TextChanged="Campo_Cambiado"/>
 
                             <TextBlock Text="Reference:" Margin="0,10,0,3"/>
-                            <TextBox x:Name="TxtReferencia" TextChanged="Campo_Cambiado"/>
+                            <TextBox x:Name="TxtReferencia" MaxLength="18" TextChanged="Campo_Cambiado"/>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                 <CheckBox x:Name="ChkReferenciaAuto" Content="Automatica" VerticalAlignment="Center"
                                           Checked="ChkReferenciaAuto_Checked" Unchecked="ChkReferenciaAuto_Unchecked"/>
@@ -59,7 +59,7 @@
                             </ComboBox>
 
                             <TextBlock Text="Notes:" Margin="0,10,0,3"/>
-                            <TextBox x:Name="TxtNotas" Height="50" TextWrapping="Wrap"
+                            <TextBox x:Name="TxtNotas" Height="50" MaxLength="55" TextWrapping="Wrap"
                                      AcceptsReturn="True" TextChanged="Campo_Cambiado"/>
 
                             <TextBlock Text="Copias:" Margin="0,10,0,3"/>
@@ -111,11 +111,35 @@
                     <DataGrid Grid.Row="1" x:Name="GridLote" AutoGenerateColumns="False"
                               CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Part Number" Binding="{Binding Parte}" Width="160"/>
-                            <DataGridTextColumn Header="Quantity" Binding="{Binding Cantidad}" Width="100"/>
-                            <DataGridTextColumn Header="Reference" Binding="{Binding Referencia}" Width="160"/>
+                            <DataGridTextColumn Header="Part Number" Binding="{Binding Parte}" Width="160">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="MaxLength" Value="30"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Cantidad}" Width="100">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="MaxLength" Value="10"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Reference" Binding="{Binding Referencia}" Width="160">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="MaxLength" Value="18"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="110"/>
-                            <DataGridTextColumn Header="Notes" Binding="{Binding Notas}" Width="*"/>
+                            <DataGridTextColumn Header="Notes" Binding="{Binding Notas}" Width="*">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="MaxLength" Value="55"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -177,7 +201,7 @@
                         <TextBlock Text="Datos de la etiqueta de pallet" FontSize="15" FontWeight="Bold" Margin="0,0,0,14"/>
 
                         <TextBlock Text="Reference:" Margin="0,0,0,3"/>
-                        <TextBox x:Name="TxtReferenciaPallet"/>
+                        <TextBox x:Name="TxtReferenciaPallet" MaxLength="18"/>
 
                         <TextBlock Text="Pallet:" Margin="0,10,0,3"/>
                         <TextBox x:Name="TxtPallet"/>
@@ -208,12 +232,6 @@
                         <TextBlock Text="Titulo (header):" Margin="0,0,0,3"/>
                         <TextBox x:Name="TxtTitulo"/>
 
-                        <TextBlock Text="From - linea 1:" Margin="0,10,0,3"/>
-                        <TextBox x:Name="TxtFrom1"/>
-
-                        <TextBlock Text="From - linea 2:" Margin="0,10,0,3"/>
-                        <TextBox x:Name="TxtFrom2"/>
-
                         <TextBlock Text="Formato de fecha (.NET):" Margin="0,10,0,3"/>
                         <TextBox x:Name="TxtFormatoFecha"/>
 
@@ -223,7 +241,7 @@
                         <TextBlock Text="Contador de referencias automaticas:" Margin="0,16,0,3"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="La proxima sera RF...-" VerticalAlignment="Center"/>
-                            <TextBox x:Name="TxtProximaReferencia" Width="60" Margin="6,0,0,0"/>
+                            <TextBox x:Name="TxtProximaReferencia" Width="60" MaxLength="3" Margin="6,0,0,0"/>
                             <Button Content="Reiniciar contador" Style="{StaticResource BotonNormal}"
                                     Padding="10,4" Margin="12,0,0,0" Click="BtnReiniciarContadorRef_Click"/>
                         </StackPanel>

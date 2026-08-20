@@ -72,63 +72,47 @@ namespace EtiquetasDSV
             AgregarTextoCentrado(canvas, header.Left, header.Top + header.Alto / 2, header.Ancho,
                 titulo, 15, true, Brushes.White);
 
-            // ---------------- Part Number (^FO530,60^GB480,1090,5) ----------------
-            var cajaPn = Recuadro(530, 60, 480, 1090);
-            Marco(canvas, cajaPn);
+            // ---------------- Part Number (sin caja, alineado a la izquierda) ----------------
+            var pnLabel = Punto(1015, 60);
+            AgregarTextoAnclado(canvas, pnLabel.X, pnLabel.Y, "PART NUMBER", 8, false);
 
-            var pnLabel = Punto(945, 60);
-            AgregarTextoCentrado(canvas, cajaPn.Left, pnLabel.Y, 1090 * escala, "PART NUMBER", 8, false);
+            var pnValor = Punto(930, 60);
+            AgregarTextoAnclado(canvas, pnValor.X, pnValor.Y,
+                string.IsNullOrWhiteSpace(parte) ? "(vacio)" : parte, 15, true, maxWidth: 300 * escala);
 
-            var pnValor = Punto(840, 60);
-            AgregarTextoCentrado(canvas, cajaPn.Left, pnValor.Y, 1090 * escala,
-                string.IsNullOrWhiteSpace(parte) ? "(vacio)" : parte, 15, true);
+            var pnBarcode = Punto(785, 280);
+            DibujarBarcode(canvas, pnBarcode.X, pnBarcode.Y, 350 * escala, 40 * escala, parte);
 
-            var pnBarcode = Punto(620, 260);
-            DibujarBarcode(canvas, pnBarcode.X, pnBarcode.Y, 420 * escala, 45 * escala, parte);
+            // ---------------- Quantity (sin caja, alineado a la izquierda) ----------------
+            var qtyLabel = Punto(685, 60);
+            AgregarTextoAnclado(canvas, qtyLabel.X, qtyLabel.Y, "QUANTITY", 8, false);
 
-            // ---------------- Quantity (^FO530,1150^GB480,740,5) ----------------
-            var cajaQty = Recuadro(530, 1150, 480, 740);
-            Marco(canvas, cajaQty);
+            var qtyValor = Punto(605, 60);
+            AgregarTextoAnclado(canvas, qtyValor.X, qtyValor.Y,
+                string.IsNullOrWhiteSpace(cantidad) ? "(vacio)" : cantidad, 14, true, maxWidth: 240 * escala);
 
-            var qtyLabel = Punto(945, 1150);
-            AgregarTextoCentrado(canvas, cajaQty.Left, qtyLabel.Y, 740 * escala, "QUANTITY", 8, false);
+            var qtyBarcode = Punto(470, 280);
+            DibujarBarcode(canvas, qtyBarcode.X, qtyBarcode.Y, 310 * escala, 38 * escala, cantidad);
 
-            var qtyValor = Punto(840, 1150);
-            AgregarTextoCentrado(canvas, cajaQty.Left, qtyValor.Y, 740 * escala,
-                string.IsNullOrWhiteSpace(cantidad) ? "(vacio)" : cantidad, 15, true);
-
-            var qtyBarcode = Punto(620, 1380);
-            DibujarBarcode(canvas, qtyBarcode.X, qtyBarcode.Y, 280 * escala, 45 * escala, cantidad);
-
-            // ---------------- Reference (sin ^FB, alineado a la izquierda) ----------------
-            var refLabel = Punto(435, 60);
+            // ---------------- Reference (sin caja, alineado a la izquierda) ----------------
+            var refLabel = Punto(380, 60);
             AgregarTextoAnclado(canvas, refLabel.X, refLabel.Y, "REFERENCE", 8, false);
 
-            var refValor = Punto(335, 60);
+            var refValor = Punto(320, 60);
             AgregarTextoAnclado(canvas, refValor.X, refValor.Y,
-                string.IsNullOrWhiteSpace(referencia) ? "(vacio)" : referencia, 12, true, maxWidth: 260 * escala);
+                string.IsNullOrWhiteSpace(referencia) ? "(vacio)" : referencia, 11, true, maxWidth: 220 * escala);
 
-            var refBarcode = Punto(310, 800);
-            DibujarBarcode(canvas, refBarcode.X, refBarcode.Y, 260 * escala, 38 * escala, referencia);
+            var refBarcode = Punto(175, 280);
+            DibujarBarcode(canvas, refBarcode.X, refBarcode.Y, 220 * escala, 36 * escala, referencia);
 
-            // ---------------- Tipo (^FO350,1500^GB120,390,5) ----------------
-            var cajaTipo = Recuadro(350, 1500, 120, 390);
+            // ---------------- Tipo (^FO225,1500^GB120,390,5) ----------------
+            var cajaTipo = Recuadro(225, 1500, 120, 390);
             Marco(canvas, cajaTipo);
 
-            var tipoTexto = Punto(370, 1500);
+            var tipoTexto = Punto(240, 1500);
             AgregarTextoCentrado(canvas, cajaTipo.Left, tipoTexto.Y, 390 * escala, tipo, 11, true);
 
-            // ---------------- From ----------------
-            var fromLabel = Punto(215, 60);
-            AgregarTextoAnclado(canvas, fromLabel.X, fromLabel.Y, "FROM", 8, true);
-
-            var from1 = Punto(165, 60);
-            AgregarTextoAnclado(canvas, from1.X, from1.Y, cfg.FromLinea1, 8, false);
-
-            var from2 = Punto(120, 60);
-            AgregarTextoAnclado(canvas, from2.X, from2.Y, cfg.FromLinea2, 8, false);
-
-            // ---------------- Notes y fecha (misma fila que ^FO50,60 / 250 / 1400) ----------------
+            // ---------------- Notes y fecha (misma columna que ^FO50,60 / 250 / 1500) ----------------
             var notesLabel = Punto(50, 60);
             AgregarTextoAnclado(canvas, notesLabel.X, notesLabel.Y, "NOTES:", 8, true);
 
@@ -138,13 +122,13 @@ namespace EtiquetasDSV
                 AgregarTextoAnclado(canvas, notasPunto.X, notasPunto.Y, notas, 8, false, maxWidth: 900 * escala);
             }
 
-            var fechaPunto = Punto(50, 1400);
+            var fechaPunto = Punto(50, 1500);
             AgregarTextoAnclado(canvas, fechaPunto.X, fechaPunto.Y, $"DATE: {fecha}", 8, false);
 
             // ---------------- Separadores (^GB4,1830,4) ----------------
-            LineaSeparadora(canvas, Recuadro(506, 60, 4, 1830));
-            LineaSeparadora(canvas, Recuadro(270, 60, 4, 1830));
-            LineaSeparadora(canvas, Recuadro(100, 60, 4, 1830));
+            LineaSeparadora(canvas, Recuadro(735, 60, 4, 1830));
+            LineaSeparadora(canvas, Recuadro(425, 60, 4, 1830));
+            LineaSeparadora(canvas, Recuadro(135, 60, 4, 1830));
         }
 
         private static void Marco(Canvas canvas, (double Left, double Top, double Ancho, double Alto) r)
