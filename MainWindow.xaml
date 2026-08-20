@@ -60,6 +60,7 @@
 
                             <TextBlock Text="Tipo:" Margin="0,10,0,3"/>
                             <ComboBox x:Name="CmbTipo" SelectionChanged="Campo_Cambiado">
+                                <ComboBoxItem Content=""/>
                                 <ComboBoxItem Content="INBOND" IsSelected="True"/>
                                 <ComboBoxItem Content="DOMESTIC"/>
                             </ComboBox>
