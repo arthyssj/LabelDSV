@@ -51,28 +51,34 @@ sin permisos de instalacion.
 Cuatro pestanas en la ventana principal (`MainWindow.xaml`):
 
 1. **Imprimir individual** - captura los datos de una etiqueta (Part
-   Number, Quantity, Reference, Tipo, Notes, copias, impresora), muestra
-   una vista previa aproximada y la envia a imprimir.
+   Number, Quantity, Reference, Tipo, Notes, copias), con contador de
+   caracteres en vivo bajo cada campo limitado (Part Number 30, Quantity
+   10, Reference 18, Notes 55), muestra una vista previa aproximada y la
+   envia a imprimir.
 2. **Imprimir lote** - una tabla editable donde se pueden agregar filas a
-   mano o pegar directamente filas copiadas de Excel (Ctrl+V / boton
-   "Pegar del portapapeles", columnas en orden Part Number, Quantity,
-   Reference, Tipo, Notes separadas por tab). Imprime todas las filas en
-   segundo plano con barra de progreso y boton de cancelar.
-3. **Pallet** - etiqueta de pallet independiente, con solo dos campos
-   (Reference y Pallet) mas copias e impresora. Usa una plantilla ZPL
-   propia (`ZplBuilder.ConstruirPallet()`, ver "Ajustar el diseno de la
-   etiqueta" abajo) que no va rotada 90 grados como la etiqueta principal,
-   por lo que no tiene panel de vista previa.
+   mano o pegar directamente filas copiadas de Excel (Ctrl+V o boton
+   "Pegar", columnas en orden Part Number, Quantity, Reference, Tipo,
+   Notes separadas por tab). Imprime todas las filas en segundo plano con
+   barra de progreso y boton de cancelar.
+3. **Pallet** - igual que "Imprimir lote" pero para etiquetas de pallet:
+   tabla editable (columnas Pallet, Reference), pegado desde Excel con
+   Ctrl+V, impresion en lote en segundo plano con progreso y cancelar.
+   Usa una plantilla ZPL propia (`ZplBuilder.ConstruirPallet()`, ver
+   "Ajustar el diseno de la etiqueta" abajo) que no va rotada 90 grados
+   como la etiqueta principal, por lo que no tiene panel de vista previa.
+   La Reference en este tab siempre se captura a mano (sin autogenerar).
 4. **Configuracion** - datos fijos que se repiten en toda etiqueta
-   (titulo del header, dos lineas de "From", formato de fecha .NET). Se
-   guardan en disco y se recargan al abrir la app.
+   (titulo del header, formato de fecha .NET), la impresora a usar (unica
+   para toda la app, ya no hay un combo distinto por pestana) y el
+   contador de referencias automaticas. Se guardan en disco y se recargan
+   al abrir la app.
 
 ## Estructura del proyecto
 
     EtiquetasDSV.csproj      - configuracion del proyecto (icono, target framework, publish)
     App.xaml / .cs           - punto de entrada; App.xaml define TODO el tema oscuro global
-                                (colores, estilos de Button/TextBox/ComboBox/TabControl/DataGrid,
-                                sombras y esquinas redondeadas) como recursos compartidos
+                                (colores, estilos de Button/TextBox/ComboBox/TabControl/DataGrid/
+                                ScrollBar, sombras y esquinas redondeadas) como recursos compartidos
     MainWindow.xaml           - diseno de las 4 pestanas (Individual, Lote, Pallet, Config) + header
     MainWindow.xaml.cs        - logica de la ventana: eventos, validaciones, impresion, lote, pallet
     ZplBuilder.cs              - construye la cadena ZPL de la etiqueta (fuente de verdad de
@@ -84,7 +90,8 @@ Cuatro pestanas en la ventana principal (`MainWindow.xaml`):
     CustomMessageBox.xaml / .cs  - dialogo modal con tema oscuro propio; reemplaza
                                  System.Windows.MessageBox (que siempre sale en blanco/claro)
     FilaLote.cs                   - modelo de una fila de la tabla de lote (INotifyPropertyChanged)
-    Config.cs                      - configuracion persistente (JSON en el perfil de Windows)
+    FilaPallet.cs                  - modelo de una fila de la tabla de pallets en lote (idem)
+    Config.cs                       - configuracion persistente (JSON en el perfil de Windows)
 
 ## Tema visual (App.xaml)
 
@@ -106,7 +113,8 @@ automaticamente sin repetir estilos:
   `ComboBox` (incluyendo el `Popup` desplegable y `ComboBoxItem`, que por
   defecto WPF dibuja en blanco), `TabControl` (la franja completa del
   header de pestanas, para que no quede una franja clara donde no hay
-  pestanas) y `TabItem`.
+  pestanas), `TabItem` y `ScrollBar` (track transparente, thumb delgado
+  que resalta en hover/drag, sin flechas).
 - **`CustomMessageBox`** sigue el mismo tema (panel oscuro, botones con
   los mismos estilos, iconos de color segun severidad) en vez del
   `MessageBox` nativo de Windows, que ignora el tema oscuro de la app.
@@ -156,19 +164,22 @@ Envia la cadena ZPL como datos RAW directamente a la cola de impresion de
 Windows via P/Invoke a `winspool.drv` (`OpenPrinter` / `StartDocPrinter` /
 `WritePrinter` / ...), sin pasar por el subsistema de graficos de
 Windows. No depende de `System.Drawing.Printing` ni de referencias
-extra. `ListarImpresoras()` usa `EnumPrinters` para poblar los combos de
-impresora en ambas pestanas.
+extra. `ListarImpresoras()` usa `EnumPrinters` para poblar el unico combo
+de impresora de la app, en la pestana Configuracion; Individual, Lote y
+Pallet imprimen con esa misma impresora guardada.
 
 ## Configuracion persistente (Config.cs)
 
-Los datos fijos (titulo, direccion "From", formato de fecha, ultima
-impresora y copias usadas) se guardan como JSON en:
+Los datos fijos (titulo, formato de fecha, ultima impresora y copias
+usadas) se guardan como JSON en:
 
     %USERPROFILE%\etiquetas_dsv_config.json
 
 Se cargan al iniciar la app (`Config.Cargar()`) y se guardan al presionar
-"Guardar configuracion" (`Config.Guardar()`). Si el archivo no existe o
-esta corrupto, se usan valores por defecto sin tronar la app.
+"Guardar configuracion" (`Config.Guardar()`) — excepto la impresora, que
+se guarda de inmediato al cambiarla en el combo, sin necesidad de ese
+boton. Si el archivo no existe o esta corrupto, se usan valores por
+defecto sin tronar la app.
 
 ## Ajustar el diseno de la etiqueta
 
