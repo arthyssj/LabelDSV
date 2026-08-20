@@ -13,7 +13,9 @@ namespace EtiquetasDSV
     {
         private Config _cfg = Config.Cargar();
         private readonly ObservableCollection<FilaLote> _filasLote = new();
+        private readonly ObservableCollection<FilaPallet> _filasPallet = new();
         private CancellationTokenSource? _ctsLote;
+        private CancellationTokenSource? _ctsPallet;
 
         public MainWindow()
         {
@@ -22,12 +24,15 @@ namespace EtiquetasDSV
             GridLote.ItemsSource = _filasLote;
             _filasLote.CollectionChanged += (s, e) => ActualizarConteo();
 
+            GridPallet.ItemsSource = _filasPallet;
+            _filasPallet.CollectionChanged += (s, e) => ActualizarConteoPallet();
+
             CargarConfigEnUI();
             RefrescarImpresoras();
             ActualizarVistaPrevia();
             ActualizarContadoresIndividual();
-            ActualizarContadorReferenciaPallet();
             ActualizarConteo();
+            ActualizarConteoPallet();
         }
 
         // ================================================================
@@ -208,21 +213,118 @@ namespace EtiquetasDSV
         }
 
         // ================================================================
-        // TAB PALLET
+        // TAB PALLET (en lote)
         // ================================================================
-        private void TxtReferenciaPallet_TextChanged(object sender, TextChangedEventArgs e) =>
-            ActualizarContadorReferenciaPallet();
-
-        private void ActualizarContadorReferenciaPallet()
+        private void BtnAgregarFilaPallet_Click(object sender, RoutedEventArgs e)
         {
-            if (TxtContadorReferenciaPallet == null) return;
-            TxtContadorReferenciaPallet.Text = $"{TxtReferenciaPallet.Text.Length}/18";
+            _filasPallet.Add(new FilaPallet());
         }
 
-        private void BtnImprimirPallet_Click(object sender, RoutedEventArgs e)
+        private void BtnEliminarFilaPallet_Click(object sender, RoutedEventArgs e)
         {
-            string impresora = CmbImpresoraPallet.SelectedItem as string ?? "";
+            if (GridPallet.SelectedItem is FilaPallet fila)
+                _filasPallet.Remove(fila);
+        }
 
+        private void BtnDuplicarFilaPallet_Click(object sender, RoutedEventArgs e)
+        {
+            if (GridPallet.SelectedItem is not FilaPallet fila)
+            {
+                CustomMessageBox.Show("Selecciona una fila para duplicar.", "Sin seleccion",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var copia = new FilaPallet
+            {
+                Pallet = fila.Pallet,
+                Referencia = fila.Referencia
+            };
+
+            int indice = _filasPallet.IndexOf(fila);
+            _filasPallet.Insert(indice + 1, copia);
+        }
+
+        private void BtnLimpiarTablaPallet_Click(object sender, RoutedEventArgs e)
+        {
+            if (_filasPallet.Count == 0) return;
+
+            var resultado = CustomMessageBox.Show("¿Borrar todas las filas del lote de pallets?", "Confirmar",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (resultado == MessageBoxResult.Yes)
+                _filasPallet.Clear();
+        }
+
+        private void BtnPegarPallet_Click(object sender, RoutedEventArgs e) => PegarDelPortapapelesPallet();
+
+        /// <summary>
+        /// Pega texto tabulado (copiado de Excel) en filas nuevas de la tabla.
+        /// Orden esperado de columnas: Pallet, Reference.
+        /// </summary>
+        private void PegarDelPortapapelesPallet()
+        {
+            if (!Clipboard.ContainsText())
+            {
+                CustomMessageBox.Show("No hay texto en el portapapeles.", "Portapapeles vacio",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            string datos = Clipboard.GetText();
+            var lineas = datos.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+            int agregadas = 0;
+            foreach (var linea in lineas)
+            {
+                if (string.IsNullOrWhiteSpace(linea)) continue;
+
+                var partes = linea.Split('\t');
+                string pallet = partes.Length > 0 ? partes[0].Trim() : "";
+                string referencia = partes.Length > 1 ? partes[1].Trim() : "";
+
+                if (string.IsNullOrWhiteSpace(pallet)) continue;
+
+                _filasPallet.Add(new FilaPallet
+                {
+                    Pallet = pallet,
+                    Referencia = referencia
+                });
+                agregadas++;
+            }
+
+            ActualizarConteoPallet();
+
+            if (agregadas == 0)
+            {
+                CustomMessageBox.Show(
+                    "No se reconocieron filas validas. Copia las columnas Pallet y " +
+                    "Reference directamente desde Excel.",
+                    "Sin datos", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void ActualizarConteoPallet()
+        {
+            if (TxtConteoPallet == null) return;
+
+            int pallets = _filasPallet.Count;
+            int copias = int.TryParse(TxtCopiasPallet?.Text, out int c) ? c : 1;
+            int total = pallets * Math.Max(1, copias);
+
+            TxtConteoPallet.Text = $"Pallets en lote: {pallets}   |   Total de etiquetas: {total}";
+        }
+
+        private async void BtnImprimirLotePallet_Click(object sender, RoutedEventArgs e)
+        {
+            if (_filasPallet.Count == 0)
+            {
+                CustomMessageBox.Show("Agrega al menos una fila.", "Lote vacio",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string impresora = CmbImpresoraPallet.SelectedItem as string ?? "";
             if (string.IsNullOrWhiteSpace(impresora))
             {
                 CustomMessageBox.Show("Selecciona una impresora.", "Falta impresora",
@@ -230,29 +332,83 @@ namespace EtiquetasDSV
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(TxtPallet.Text))
-            {
-                CustomMessageBox.Show("Captura el Pallet.", "Falta dato",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            int copias = int.TryParse(TxtCopiasPallet.Text, out int cop) ? cop : 4;
+            var filas = _filasPallet.ToList();
+            int total = filas.Count * Math.Max(1, copias);
 
-            int copias = int.TryParse(TxtCopiasPallet.Text, out int c) ? c : 4;
+            _ctsPallet = new CancellationTokenSource();
+            var token = _ctsPallet.Token;
 
-            string zpl = ZplBuilder.ConstruirPallet(
-                TxtReferenciaPallet.Text, TxtPallet.Text, _cfg, copias);
+            BarraProgresoPallet.Maximum = total;
+            BarraProgresoPallet.Value = 0;
+            BtnImprimirPallet.IsEnabled = false;
+            BtnCancelarPallet.IsEnabled = true;
+            TxtEstadoLotePallet.Text = $"Imprimiendo 0 de {total}...";
+
+            int enviados = 0;
 
             try
             {
-                PrinterService.EnviarZpl(impresora, zpl);
-                CustomMessageBox.Show($"{copias} etiquetas enviadas.", "Listo",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                await Task.Run(() =>
+                {
+                    foreach (var fila in filas)
+                    {
+                        if (token.IsCancellationRequested) break;
+
+                        if (string.IsNullOrWhiteSpace(fila.Pallet)) continue;
+
+                        string zpl = ZplBuilder.ConstruirPallet(
+                            fila.Referencia, fila.Pallet, _cfg, copias);
+
+                        PrinterService.EnviarZpl(impresora, zpl);
+                        enviados += copias;
+
+                        int enviadosActual = enviados;
+                        Dispatcher.Invoke(() =>
+                        {
+                            BarraProgresoPallet.Value = enviadosActual;
+                            TxtEstadoLotePallet.Text = $"Imprimiendo {enviadosActual} de {total}...";
+                        });
+                    }
+                }, token);
+
+                if (token.IsCancellationRequested)
+                {
+                    TxtEstadoLotePallet.Text = $"Cancelado. Se alcanzaron a enviar {enviados} de {total}.";
+                }
+                else
+                {
+                    TxtEstadoLotePallet.Text = $"Listo: {enviados} etiquetas enviadas.";
+                    CustomMessageBox.Show($"{enviados} etiquetas enviadas.", "Lote terminado",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             catch (Exception ex)
             {
+                TxtEstadoLotePallet.Text = "Error durante la impresion.";
                 CustomMessageBox.Show(ex.Message, "Error al imprimir",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            finally
+            {
+                BtnImprimirPallet.IsEnabled = true;
+                BtnCancelarPallet.IsEnabled = false;
+                _ctsPallet?.Dispose();
+                _ctsPallet = null;
+            }
+        }
+
+        private void BtnCancelarLotePallet_Click(object sender, RoutedEventArgs e)
+        {
+            _ctsPallet?.Cancel();
+            TxtEstadoLotePallet.Text = "Cancelando... (termina la etiqueta actual)";
+        }
+
+        private void BtnLimpiarConteoPallet_Click(object sender, RoutedEventArgs e)
+        {
+            BarraProgresoPallet.Value = 0;
+            TxtEstadoLotePallet.Text = "Listo.";
+            ActualizarConteoPallet();
         }
 
         // ================================================================

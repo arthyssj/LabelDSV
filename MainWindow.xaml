@@ -204,34 +204,85 @@
             </TabItem>
 
             <!-- ============================================================ -->
-            <!-- TAB 3: IMPRIMIR PALLET -->
+            <!-- TAB 3: IMPRIMIR PALLET (en lote) -->
             <!-- ============================================================ -->
             <TabItem Header="Pallet">
-                <Border Margin="16" MaxWidth="360" HorizontalAlignment="Left" Style="{StaticResource PanelStyle}">
-                    <StackPanel>
-                        <TextBlock Text="Datos de la etiqueta de pallet" FontSize="15" FontWeight="Bold" Margin="0,0,0,14"/>
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <TextBlock Text="Reference:" Margin="0,0,0,3"/>
-                        <TextBox x:Name="TxtReferenciaPallet" MaxLength="18" TextChanged="TxtReferenciaPallet_TextChanged"/>
-                        <TextBlock x:Name="TxtContadorReferenciaPallet" Text="0/18" HorizontalAlignment="Right"
-                                   FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0"/>
-
-                        <TextBlock Text="Pallet:" Margin="0,10,0,3"/>
-                        <TextBox x:Name="TxtPallet"/>
-
-                        <TextBlock Text="Copias:" Margin="0,10,0,3"/>
-                        <TextBox x:Name="TxtCopiasPallet" Text="4" Width="60" HorizontalAlignment="Left"/>
-
-                        <TextBlock Text="Impresora:" Margin="0,10,0,3"/>
-                        <ComboBox x:Name="CmbImpresoraPallet"/>
-
-                        <Button Content="Actualizar lista de impresoras" Style="{StaticResource BotonNormal}"
-                                Margin="0,12,0,0" Click="BtnActualizarImpresoras_Click"/>
-
-                        <Button Content="Imprimir" Style="{StaticResource BotonImprimir}"
-                                Height="40" Margin="0,10,0,0" Click="BtnImprimirPallet_Click"/>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                        <TextBlock Text="Pega filas desde Excel (Pallet, Reference) o agrega manualmente."/>
+                        <TextBlock Foreground="{StaticResource TextMuted}" FontSize="11" Margin="0,3,0,0"
+                            Text="Limite de caracteres: Reference 18."/>
                     </StackPanel>
-                </Border>
+
+                    <DataGrid Grid.Row="1" x:Name="GridPallet" AutoGenerateColumns="False"
+                              CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Pallet" Binding="{Binding Pallet}" Width="220"/>
+                            <DataGridTextColumn Header="Reference" Binding="{Binding Referencia}" Width="*">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="MaxLength" Value="18"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <WrapPanel Grid.Row="2" Margin="0,12,0,0">
+                        <Button Content="Agregar fila" Style="{StaticResource BotonNormal}"
+                                Margin="0,0,8,0" Click="BtnAgregarFilaPallet_Click"/>
+                        <Button Content="Duplicar fila" Style="{StaticResource BotonNormal}"
+                                Margin="0,0,8,0" Click="BtnDuplicarFilaPallet_Click"/>
+                        <Button Content="Pegar" Style="{StaticResource BotonNormal}"
+                                Margin="0,0,8,0" Click="BtnPegarPallet_Click"/>
+                        <Button Content="Eliminar fila" Style="{StaticResource BotonNormal}"
+                                Margin="0,0,8,0" Click="BtnEliminarFilaPallet_Click"/>
+                        <Button Content="Limpiar todo" Style="{StaticResource BotonNormal}"
+                                Margin="0,0,8,0" Click="BtnLimpiarTablaPallet_Click"/>
+                    </WrapPanel>
+
+                    <Border Grid.Row="3" Margin="0,14,0,0" Style="{StaticResource PanelStyle}" Padding="14">
+                        <StackPanel>
+                            <TextBlock Text="Impresion del lote de pallets" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
+
+                            <WrapPanel VerticalAlignment="Center">
+                                <TextBlock Text="Copias por etiqueta:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox x:Name="TxtCopiasPallet" Text="4" Width="50" Margin="0,0,24,0"/>
+
+                                <TextBlock Text="Impresora:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <ComboBox x:Name="CmbImpresoraPallet" Width="220" Margin="0,0,24,0"/>
+
+                                <Button Content="Actualizar impresoras" Style="{StaticResource BotonNormal}"
+                                        Margin="0,0,24,0" Click="BtnActualizarImpresoras_Click"/>
+
+                                <Button x:Name="BtnImprimirPallet" Content="Imprimir lote"
+                                        Style="{StaticResource BotonImprimir}" Margin="0,0,8,0"
+                                        Click="BtnImprimirLotePallet_Click"/>
+
+                                <Button x:Name="BtnCancelarPallet" Content="Cancelar"
+                                        Style="{StaticResource BotonCancelar}" Margin="0,0,8,0"
+                                        IsEnabled="False" Click="BtnCancelarLotePallet_Click"/>
+
+                                <Button Content="Reiniciar conteo" Style="{StaticResource BotonNormal}"
+                                        Click="BtnLimpiarConteoPallet_Click"/>
+                            </WrapPanel>
+
+                            <TextBlock x:Name="TxtConteoPallet" Margin="0,10,0,4" FontWeight="Bold"
+                                       Text="Pallets en lote: 0   |   Total de etiquetas: 0"/>
+
+                            <ProgressBar x:Name="BarraProgresoPallet" Margin="0,4,0,4"/>
+
+                            <TextBlock x:Name="TxtEstadoLotePallet" Text="Listo." Foreground="{StaticResource TextMuted}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </TabItem>
 
             <!-- ============================================================ -->
