@@ -25,6 +25,8 @@ namespace EtiquetasDSV
             CargarConfigEnUI();
             RefrescarImpresoras();
             ActualizarVistaPrevia();
+            ActualizarContadoresIndividual();
+            ActualizarContadorReferenciaPallet();
             ActualizarConteo();
         }
 
@@ -112,7 +114,23 @@ namespace EtiquetasDSV
         // ================================================================
         // TAB INDIVIDUAL
         // ================================================================
-        private void Campo_Cambiado(object sender, RoutedEventArgs e) => ActualizarVistaPrevia();
+        private void Campo_Cambiado(object sender, RoutedEventArgs e)
+        {
+            ActualizarVistaPrevia();
+            ActualizarContadoresIndividual();
+        }
+
+        private void ActualizarContadoresIndividual()
+        {
+            // TxtContadorNotas es el ultimo de este grupo en el XAML: si ya
+            // existe, los demas controles referenciados abajo tambien.
+            if (TxtContadorNotas == null) return;
+
+            TxtContadorParte.Text = $"{TxtParte.Text.Length}/30";
+            TxtContadorCantidad.Text = $"{TxtCantidad.Text.Length}/10";
+            TxtContadorReferencia.Text = $"{TxtReferencia.Text.Length}/18";
+            TxtContadorNotas.Text = $"{TxtNotas.Text.Length}/55";
+        }
 
         private void ChkReferenciaAuto_Checked(object sender, RoutedEventArgs e)
         {
@@ -192,6 +210,15 @@ namespace EtiquetasDSV
         // ================================================================
         // TAB PALLET
         // ================================================================
+        private void TxtReferenciaPallet_TextChanged(object sender, TextChangedEventArgs e) =>
+            ActualizarContadorReferenciaPallet();
+
+        private void ActualizarContadorReferenciaPallet()
+        {
+            if (TxtContadorReferenciaPallet == null) return;
+            TxtContadorReferenciaPallet.Text = $"{TxtReferenciaPallet.Text.Length}/18";
+        }
+
         private void BtnImprimirPallet_Click(object sender, RoutedEventArgs e)
         {
             string impresora = CmbImpresoraPallet.SelectedItem as string ?? "";

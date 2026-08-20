@@ -39,12 +39,18 @@
 
                             <TextBlock Text="Part Number:" Margin="0,0,0,3"/>
                             <TextBox x:Name="TxtParte" MaxLength="30" TextChanged="Campo_Cambiado"/>
+                            <TextBlock x:Name="TxtContadorParte" Text="0/30" HorizontalAlignment="Right"
+                                       FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0"/>
 
                             <TextBlock Text="Quantity:" Margin="0,10,0,3"/>
                             <TextBox x:Name="TxtCantidad" MaxLength="10" TextChanged="Campo_Cambiado"/>
+                            <TextBlock x:Name="TxtContadorCantidad" Text="0/10" HorizontalAlignment="Right"
+                                       FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0"/>
 
                             <TextBlock Text="Reference:" Margin="0,10,0,3"/>
                             <TextBox x:Name="TxtReferencia" MaxLength="18" TextChanged="Campo_Cambiado"/>
+                            <TextBlock x:Name="TxtContadorReferencia" Text="0/18" HorizontalAlignment="Right"
+                                       FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0"/>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                 <CheckBox x:Name="ChkReferenciaAuto" Content="Automatica" VerticalAlignment="Center"
                                           Checked="ChkReferenciaAuto_Checked" Unchecked="ChkReferenciaAuto_Unchecked"/>
@@ -61,6 +67,8 @@
                             <TextBlock Text="Notes:" Margin="0,10,0,3"/>
                             <TextBox x:Name="TxtNotas" Height="50" MaxLength="55" TextWrapping="Wrap"
                                      AcceptsReturn="True" TextChanged="Campo_Cambiado"/>
+                            <TextBlock x:Name="TxtContadorNotas" Text="0/55" HorizontalAlignment="Right"
+                                       FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0"/>
 
                             <TextBlock Text="Copias:" Margin="0,10,0,3"/>
                             <TextBox x:Name="TxtCopias" Text="4" Width="60" HorizontalAlignment="Left"/>
@@ -105,8 +113,11 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Margin="0,0,0,10"
-                        Text="Pega filas desde Excel (Part Number, Quantity, Reference, Tipo, Notes) o agrega manualmente."/>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                        <TextBlock Text="Pega filas desde Excel (Part Number, Quantity, Reference, Tipo, Notes) o agrega manualmente."/>
+                        <TextBlock Foreground="{StaticResource TextMuted}" FontSize="11" Margin="0,3,0,0"
+                            Text="Limites de caracteres: Part Number 30, Quantity 10, Reference 18, Notes 55."/>
+                    </StackPanel>
 
                     <DataGrid Grid.Row="1" x:Name="GridLote" AutoGenerateColumns="False"
                               CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False">
@@ -201,7 +212,9 @@
                         <TextBlock Text="Datos de la etiqueta de pallet" FontSize="15" FontWeight="Bold" Margin="0,0,0,14"/>
 
                         <TextBlock Text="Reference:" Margin="0,0,0,3"/>
-                        <TextBox x:Name="TxtReferenciaPallet" MaxLength="18"/>
+                        <TextBox x:Name="TxtReferenciaPallet" MaxLength="18" TextChanged="TxtReferenciaPallet_TextChanged"/>
+                        <TextBlock x:Name="TxtContadorReferenciaPallet" Text="0/18" HorizontalAlignment="Right"
+                                   FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0"/>
 
                         <TextBlock Text="Pallet:" Margin="0,10,0,3"/>
                         <TextBox x:Name="TxtPallet"/>
