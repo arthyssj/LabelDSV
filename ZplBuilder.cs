@@ -69,7 +69,7 @@ namespace EtiquetasDSV
             // Reference
             z.Append("^FO435,60^A0R,45,45^FDREFERENCE^FS");
             z.Append($"^FO335,60^A0R,85,85^FD{referencia}^FS");
-            z.Append($"^FO300,900^BY3^BCR,150,Y,N,N^FD{referencia}^FS");
+            z.Append($"^FO310,800^BY3^BCR,150,Y,N,N^FD{referencia}^FS");
 
             // Tipo
             z.Append("^FO350,1500^GB120,390,5^FS");

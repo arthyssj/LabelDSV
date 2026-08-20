@@ -108,7 +108,7 @@ namespace EtiquetasDSV
             AgregarTextoAnclado(canvas, refValor.X, refValor.Y,
                 string.IsNullOrWhiteSpace(referencia) ? "(vacio)" : referencia, 12, true, maxWidth: 260 * escala);
 
-            var refBarcode = Punto(300, 900);
+            var refBarcode = Punto(310, 800);
             DibujarBarcode(canvas, refBarcode.X, refBarcode.Y, 260 * escala, 38 * escala, referencia);
 
             // ---------------- Tipo (^FO350,1500^GB120,390,5) ----------------
