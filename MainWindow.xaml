@@ -34,7 +34,7 @@
                     <!-- Panel de captura -->
                     <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource PanelStyle}">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                        <StackPanel>
+                        <StackPanel Margin="0,0,10,0">
                             <TextBlock Text="Datos de la etiqueta" FontSize="15" FontWeight="Bold" Margin="0,0,0,12"/>
 
                             <TextBlock Text="Part Number:" Margin="0,0,0,3"/>
