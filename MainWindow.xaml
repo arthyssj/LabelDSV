@@ -73,12 +73,6 @@
                             <TextBlock Text="Copias:" Margin="0,10,0,3"/>
                             <TextBox x:Name="TxtCopias" Text="4" Width="60" HorizontalAlignment="Left"/>
 
-                            <TextBlock Text="Impresora:" Margin="0,10,0,3"/>
-                            <ComboBox x:Name="CmbImpresora"/>
-
-                            <Button Content="Actualizar lista de impresoras" Style="{StaticResource BotonNormal}"
-                                    Margin="0,12,0,0" Click="BtnActualizarImpresoras_Click"/>
-
                             <Button Content="Vista previa" Style="{StaticResource BotonNormal}"
                                     Margin="0,14,0,0" Click="BtnVistaPrevia_Click"/>
 
@@ -113,14 +107,12 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
-                        <TextBlock Text="Pega filas desde Excel (Part Number, Quantity, Reference, Tipo, Notes) o agrega manualmente."/>
-                        <TextBlock Foreground="{StaticResource TextMuted}" FontSize="11" Margin="0,3,0,0"
-                            Text="Limites de caracteres: Part Number 30, Quantity 10, Reference 18, Notes 55."/>
-                    </StackPanel>
+                    <TextBlock Grid.Row="0" Margin="0,0,0,10" Foreground="{StaticResource TextMuted}" FontSize="11"
+                        Text="Limites de caracteres: Part Number 30, Quantity 10, Reference 18, Notes 55."/>
 
                     <DataGrid Grid.Row="1" x:Name="GridLote" AutoGenerateColumns="False"
-                              CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False">
+                              CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False"
+                              PreviewKeyDown="GridLote_PreviewKeyDown">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Part Number" Binding="{Binding Parte}" Width="160">
                                 <DataGridTextColumn.EditingElementStyle>
@@ -177,9 +169,6 @@
                                 <TextBlock Text="Copias por etiqueta:" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                 <TextBox x:Name="TxtCopiasLote" Text="4" Width="50" Margin="0,0,24,0"/>
 
-                                <TextBlock Text="Impresora:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <ComboBox x:Name="CmbImpresoraLote" Width="220" Margin="0,0,24,0"/>
-
                                 <Button x:Name="BtnImprimirLote" Content="Imprimir lote"
                                         Style="{StaticResource BotonImprimir}" Margin="0,0,8,0"
                                         Click="BtnImprimirLote_Click"/>
@@ -215,14 +204,12 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
-                        <TextBlock Text="Pega filas desde Excel (Pallet, Reference) o agrega manualmente."/>
-                        <TextBlock Foreground="{StaticResource TextMuted}" FontSize="11" Margin="0,3,0,0"
-                            Text="Limite de caracteres: Reference 18."/>
-                    </StackPanel>
+                    <TextBlock Grid.Row="0" Margin="0,0,0,10" Foreground="{StaticResource TextMuted}" FontSize="11"
+                        Text="Limite de caracteres: Reference 18."/>
 
                     <DataGrid Grid.Row="1" x:Name="GridPallet" AutoGenerateColumns="False"
-                              CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False">
+                              CanUserAddRows="False" HeadersVisibility="Column" CanUserSortColumns="False"
+                              PreviewKeyDown="GridPallet_PreviewKeyDown">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Pallet" Binding="{Binding Pallet}" Width="220"/>
                             <DataGridTextColumn Header="Reference" Binding="{Binding Referencia}" Width="*">
@@ -255,12 +242,6 @@
                             <WrapPanel VerticalAlignment="Center">
                                 <TextBlock Text="Copias por etiqueta:" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                 <TextBox x:Name="TxtCopiasPallet" Text="4" Width="50" Margin="0,0,24,0"/>
-
-                                <TextBlock Text="Impresora:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <ComboBox x:Name="CmbImpresoraPallet" Width="220" Margin="0,0,24,0"/>
-
-                                <Button Content="Actualizar impresoras" Style="{StaticResource BotonNormal}"
-                                        Margin="0,0,24,0" Click="BtnActualizarImpresoras_Click"/>
 
                                 <Button x:Name="BtnImprimirPallet" Content="Imprimir lote"
                                         Style="{StaticResource BotonImprimir}" Margin="0,0,8,0"
@@ -301,6 +282,12 @@
 
                         <TextBlock Margin="0,6,0,0" Foreground="{StaticResource TextMuted}" FontSize="11"
                             Text="Ejemplos: dd-MM-yyyy = 31-07-2026     yyyy-MM-dd = 2026-07-31"/>
+
+                        <TextBlock Text="Impresora:" Margin="0,16,0,3"/>
+                        <ComboBox x:Name="CmbImpresora" SelectionChanged="CmbImpresora_SelectionChanged"/>
+
+                        <Button Content="Actualizar lista de impresoras" Style="{StaticResource BotonNormal}"
+                                Margin="0,8,0,0" Click="BtnActualizarImpresoras_Click"/>
 
                         <TextBlock Text="Contador de referencias automaticas:" Margin="0,16,0,3"/>
                         <StackPanel Orientation="Horizontal">

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace EtiquetasDSV
@@ -78,9 +79,6 @@ namespace EtiquetasDSV
             _cfg.Titulo = TxtTitulo.Text;
             _cfg.FormatoFecha = TxtFormatoFecha.Text;
 
-            if (CmbImpresora.SelectedItem is string impresora)
-                _cfg.Impresora = impresora;
-
             if (int.TryParse(TxtCopias.Text, out int copias))
                 _cfg.Copias = copias;
 
@@ -92,28 +90,33 @@ namespace EtiquetasDSV
         }
 
         // ================================================================
-        // IMPRESORAS
+        // IMPRESORAS (configuradas una sola vez en la pestaña Configuracion)
         // ================================================================
         private void RefrescarImpresoras()
         {
             var impresoras = PrinterService.ListarImpresoras();
 
             CmbImpresora.ItemsSource = impresoras;
-            CmbImpresoraLote.ItemsSource = impresoras;
-            CmbImpresoraPallet.ItemsSource = impresoras;
 
             string preferida = !string.IsNullOrEmpty(_cfg.Impresora) && impresoras.Contains(_cfg.Impresora)
                 ? _cfg.Impresora
                 : impresoras.FirstOrDefault() ?? "";
 
             CmbImpresora.SelectedItem = preferida;
-            CmbImpresoraLote.SelectedItem = preferida;
-            CmbImpresoraPallet.SelectedItem = preferida;
         }
 
         private void BtnActualizarImpresoras_Click(object sender, RoutedEventArgs e)
         {
             RefrescarImpresoras();
+        }
+
+        private void CmbImpresora_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbImpresora.SelectedItem is string impresora)
+            {
+                _cfg.Impresora = impresora;
+                _cfg.Guardar();
+            }
         }
 
         // ================================================================
@@ -176,11 +179,11 @@ namespace EtiquetasDSV
 
         private void BtnImprimirIndividual_Click(object sender, RoutedEventArgs e)
         {
-            string impresora = CmbImpresora.SelectedItem as string ?? "";
+            string impresora = _cfg.Impresora;
 
             if (string.IsNullOrWhiteSpace(impresora))
             {
-                CustomMessageBox.Show("Selecciona una impresora.", "Falta impresora",
+                CustomMessageBox.Show("Configura una impresora en la pestaña Configuracion.", "Falta impresora",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -258,6 +261,15 @@ namespace EtiquetasDSV
 
         private void BtnPegarPallet_Click(object sender, RoutedEventArgs e) => PegarDelPortapapelesPallet();
 
+        private void GridPallet_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                PegarDelPortapapelesPallet();
+                e.Handled = true;
+            }
+        }
+
         /// <summary>
         /// Pega texto tabulado (copiado de Excel) en filas nuevas de la tabla.
         /// Orden esperado de columnas: Pallet, Reference.
@@ -324,10 +336,10 @@ namespace EtiquetasDSV
                 return;
             }
 
-            string impresora = CmbImpresoraPallet.SelectedItem as string ?? "";
+            string impresora = _cfg.Impresora;
             if (string.IsNullOrWhiteSpace(impresora))
             {
-                CustomMessageBox.Show("Selecciona una impresora.", "Falta impresora",
+                CustomMessageBox.Show("Configura una impresora en la pestaña Configuracion.", "Falta impresora",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -482,6 +494,15 @@ namespace EtiquetasDSV
 
         private void BtnPegar_Click(object sender, RoutedEventArgs e) => PegarDelPortapapeles();
 
+        private void GridLote_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.V && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                PegarDelPortapapeles();
+                e.Handled = true;
+            }
+        }
+
         /// <summary>
         /// Pega texto tabulado (copiado de Excel) en filas nuevas de la tabla.
         /// Orden esperado de columnas: Part Number, Quantity, Reference, Tipo, Notes.
@@ -555,10 +576,10 @@ namespace EtiquetasDSV
                 return;
             }
 
-            string impresora = CmbImpresoraLote.SelectedItem as string ?? "";
+            string impresora = _cfg.Impresora;
             if (string.IsNullOrWhiteSpace(impresora))
             {
-                CustomMessageBox.Show("Selecciona una impresora.", "Falta impresora",
+                CustomMessageBox.Show("Configura una impresora en la pestaña Configuracion.", "Falta impresora",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
