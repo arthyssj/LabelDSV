@@ -1,6 +1,7 @@
 # Etiquetas DSV - version .NET / WPF
 
-![image URL](https://github.com/arthyssj/LabelDSV/blob/main/image.png?raw=true)
+![image Label](screenshot-1.png)
+![image LabelLote](screenshot-2.png)
 
 Aplicacion de escritorio para generar e imprimir etiquetas Zebra (ZPL) para
 envios IN-BOND / DOMESTIC. Reescritura de la app original en Python. Misma
